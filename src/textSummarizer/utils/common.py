@@ -9,63 +9,57 @@ from pathlib import Path
 
 
 
+
 @ensure_annotations
 def read_yaml(path_to_yaml: Path) -> ConfigBox:
-    """Reads yaml file and returns ConfigBox object.
+    """reads yaml file and returns
 
     Args:
-        path_to_yaml (Path): Path to the YAML file.
+        path_to_yaml (str): path like input
 
     Raises:
-        ValueError: If yaml file is empty or has invalid content.
-        FileNotFoundError: If the specified file does not exist.
+        ValueError: if yaml file is empty
+        e: empty file
 
     Returns:
-        ConfigBox: Parsed YAML data as a ConfigBox object.
+        ConfigBox: ConfigBox type
     """
     try:
         with open(path_to_yaml) as yaml_file:
             content = yaml.safe_load(yaml_file)
-            if not content:
-                raise ValueError("YAML file is empty")
-            logger.info(f"YAML file: {path_to_yaml} loaded successfully")
+            logger.info(f"yaml file: {path_to_yaml} loaded successfully")
             return ConfigBox(content)
     except BoxValueError as e:
-        raise ValueError("Invalid content in YAML file") from e
-    except FileNotFoundError:
-        raise
+        raise ValueError("yaml file is empty") from e
+    except Exception as e:
+        raise e
 
 
 
 @ensure_annotations
-def create_directories(path_to_directories: List[str], verbose=True):
-    """Create a list of directories.
+def create_directories(path_to_directories: list, verbose=True):
+    """create list of directories
 
     Args:
-        path_to_directories (List[str]): List of paths to directories.
-        verbose (bool, optional): Log each directory creation. Defaults to True.
+        path_to_directories (list): list of path of directories
+        ignore_log (bool, optional): ignore if multiple dirs is to be created. Defaults to False.
     """
     for path in path_to_directories:
         os.makedirs(path, exist_ok=True)
         if verbose:
-            logger.info(f"Created directory at: {path}")
+            logger.info(f"created directory at: {path}")
 
 
 
 @ensure_annotations
 def get_size(path: Path) -> str:
-    """Get size in KB.
+    """get size in KB
 
     Args:
-        path (Path): Path to the file.
+        path (Path): path of the file
 
     Returns:
-        str: Size in KB.
+        str: size in KB
     """
-    try:
-        size_in_kb = round(os.path.getsize(path) / 1024)
-        return f"~ {size_in_kb} KB"
-    except FileNotFoundError as e:
-        raise ValueError(f"File not found: {path}") from e
-    except Exception as e:
-        raise e
+    size_in_kb = round(os.path.getsize(path)/1024)
+    return f"~ {size_in_kb} KB"
