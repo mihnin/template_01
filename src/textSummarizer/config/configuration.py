@@ -1,8 +1,7 @@
 from textSummarizer.constants import *
 from textSummarizer.utils.common import read_yaml, create_directories
 # new path
-from textSummarizer.entity import (DataIngestionConfig, 
-                                   DataValidationConfig)
+from textSummarizer.entity import (DataIngestionConfig, DataValidationConfig, DataTransformationConfig)
 
 class ConfigurationManager:
     def __init__(
@@ -38,3 +37,14 @@ class ConfigurationManager:
         )
 
         return data_validation_config
+    
+    def get_data_transformation_config(self) -> DataTransformationConfig:
+        config = self.config.data_transformation
+
+        create_directories([config.root_dir])
+
+        return DataTransformationConfig(
+            root_dir=config.root_dir,
+            data_path=config.data_path,
+            tokenizer_name=config.tokenizer_name,
+        )
